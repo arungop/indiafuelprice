@@ -1,65 +1,100 @@
+# Packages needed
+
 library(tabulizer)
 library(tidyverse)
 
-#this_dir <- function(directory)
-#  setwd( file.path(getwd(), directory) )
 
+# Source file
 pdf <- "https://www.ppac.gov.in/WriteReadData/userfiles/file/PP_9_a_DailyPriceMSHSD_Metro.pdf"
 
-petrol_disel <- extract_tables(pdf,
+# Extract first few rows of table
+petrol_diesel <- extract_tables(pdf,
                             output = "matrix",
                             pages = c(1,1),
                             area = list(
-                              c(165.6,69.4,179.6,289.3),
-                              c(165.6,310,179.6,544)),
+                              c(164.246,72.158,244.977,292.080),
+                              c(164.246,310.175,244.977,537.058)),
                               guess = FALSE,
 )
 
-petrol_today <- as.data.frame(petrol_disel[[1]])
+# Petrol price
+petrol_today <- as.data.frame(petrol_diesel[[1]]) # As data.frame
 
-Pt <- petrol_today  %>% 
-  mutate_all(type.convert) %>% 
-  mutate_if(is.factor, as.character) %>%
+
+Pt <- petrol_today  %>%
+  mutate_all(type.convert) %>%
+
+  mutate_if(is.factor, as.character) %>% # Converted to character
+
   mutate(across(where(is.character), str_trim))%>%
-  mutate(map_df(petrol_today, ~ gsub('\\s+', '', .x))) %>% 
-  `colnames<-`(c("Date","Delhi","Mumbai","Chennai","Kolkata"))%>% 
-  mutate(Date=as.Date(Date, format = '%d-%B-%y'))
+
+  mutate(map_df(petrol_today, ~ gsub('\\s+', '', .x))) %>% # Remove unwanted characters
+
+  `colnames<-`(c("Date","Delhi","Mumbai","Chennai","Kolkata"))%>% # City headings
+
+  mutate(Date= lubridate::dmy(Date))%>% # Date in dmy format
+
+  mutate_if(is.character, ~as.numeric(as.character(.))) # Convert other coloumns into numeric
+
+Pt$Date <- ymd(Pt$Date) # Changed date into ymd format
 
 
+# Diesel price (Procedures same as above)
 
-diesel_today <- as.data.frame(petrol_disel[[2]])
+diesel_today <- as.data.frame(petrol_diesel[[2]])
 
-dt <- diesel_today  %>% 
-  mutate_all(type.convert) %>% 
+dt <- diesel_today  %>%
+
+  mutate_all(type.convert) %>%
+
   mutate_if(is.factor, as.character) %>%
+
   mutate(across(where(is.character), str_trim))%>%
-  mutate(map_df(diesel_today, ~ gsub('\\s+', '', .x))) %>% 
-  `colnames<-`(c("Date","Delhi","Mumbai","Chennai","Kolkata")) %>% 
-  mutate(Date=as.Date(Date, format = '%d-%B-%y'))
+
+  mutate(map_df(diesel_today, ~ gsub('\\s+', '', .x))) %>%
+
+  `colnames<-`(c("Date","Delhi","Mumbai","Chennai","Kolkata"))%>%
+
+  mutate(Date= lubridate::dmy(Date))%>%
+
+  mutate_if(is.character, ~as.numeric(as.character(.)))
+
+dt$Date <- ymd(dt$Date)
 
 
-# Append to csv
+# Append data to csv (two files)
 
 diesel <- read.csv("./data/Diesel.csv", sep = ",",
-                    fileEncoding="utf-8") 
-#%>% 
- # mutate(Date = as.Date(Date,format='%d/%m/%Y'))
+                   fileEncoding="utf-8")%>%
 
-diesel <- rbind(diesel, dt)  
+  mutate_if(is.factor, ~as.numeric(as.character(.)))%>% # All other coloumns except date is converted to numeric
 
+  mutate(Date = as.Date(Date,format='%Y-%m-%d')) # Date coloumn
+
+diesele <- rbind(diesel, dt) %>% # Rbind to append scrapped data
+  group_by(Date)  %>%
+  distinct() # Unique rows
+
+
+# Process repeated as above
 
 petrol <- read.csv("./data/Petrol.csv", sep = ",",
-                   fileEncoding="utf-8") 
-#%>% 
-  #mutate(Date = as.Date(Date,format='%d-%m-%Y'))
+                   fileEncoding="utf-8")%>%
 
-petrol <- rbind(petrol, Pt) %>% 
-  distinct()
+  mutate_if(is.factor, ~as.numeric(as.character(.)))%>%
+
+  mutate(Date = as.Date(Date,format='%Y-%m-%d'))
+
+petrole <- rbind(petrol,Pt) %>%
+  distinct()%>%
+  group_by(Date)
+
 
 
 # Export to csv
 
-write.csv(petrol,"./data/Petrol.csv", quote=F,row.names=FALSE)
+write.csv(petrole,"./data/Petrol.csv", quote=F,row.names=FALSE)
 
 
-write.csv(diesel,"./data/Diesel.csv", quote=F,row.names=FALSE)
+write.csv(diesele,"./data/Diesel.csv", quote=F,row.names=FALSE)
+
