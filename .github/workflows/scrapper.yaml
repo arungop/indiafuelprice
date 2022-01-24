@@ -22,8 +22,10 @@ jobs:
     # Set-up R
     - name: Install packages
       run: |
-        R -e 'install.packages("tabulizer")'
-        R -e 'install.packages("tidyverse")
+        R -e 'install.packages("remotes")'
+        R -e 'install.packages("rJava")'
+        R -e 'install.packages("tidyverse")'
+        R -e 'remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"),dependencies = TRUE)'
     # Run R script
     - name: Fuelprices
       run: Rscript job.R
