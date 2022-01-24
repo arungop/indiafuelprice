@@ -33,12 +33,13 @@ jobs:
       - name: Install dependency packages
         run: |
           sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev default-jre-headless
+          sudo R CMD javareconf
 
         # Set-up R packages
       - name: Install libraries
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          install.packages("rjava")
+          install.packages("rJava")
           remotes::install_github(c('ropensci/tabulizerjars', 'ropensci/tabulizer'), INSTALL_opts = '--no-multiarch', dependencies = c('Depends", 'Imports'))
           install.packages('tabulizer') 
           install.packages('tidyverse')
