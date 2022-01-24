@@ -6,7 +6,6 @@ on:
   push:
     branches: main
 
-
 jobs:
   autoscrape:
     runs-on: ubuntu-latest
@@ -14,7 +13,7 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      
+
     # Load repo and install R
     steps:
       - uses: actions/checkout@v2
@@ -38,33 +37,33 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Install dependency packages
-
         run: |
           sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev default-jre-headless
 
-    # Set-up R packages
+        # Set-up R packages
       - name: Install libraries
-      
         run: |
-
           remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch", dependencies = c("Depends", "Imports"))
           install.packages(c('rjava',
           'tabulizer',
           'tidyverse'
           ))
           shell: Rscript {0}
-    # Run R script
-    - name: Fuelprices
-      run: Rscript job.R
+
+        # Run R script
+      - name: Fuelprices
+        run: Rscript job.R
 
  # Add new files in data folder, commit along with other modified files, push
-    - name: Commit files
-      run: |
-        git config --local user.name actions-user
-        git config --local user.email "actions@github.com"
-        git add data/*
-        git commit -am "GH ACTION Headlines $(date)"
-        git push origin main
-      env:
-        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
-        username: github-actions
+      - name: Commit files
+        run: |
+          git config --local user.name actions-user
+          git config --local user.email "actions@github.com"
+          git add data/*
+          git commit -am "GH ACTION Headlines $(date)"
+          git push origin main
+        env:
+          REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+          username: github-actions
+
+
