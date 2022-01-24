@@ -38,11 +38,9 @@ jobs:
       - name: Install libraries
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch", dependencies = c("Depends", "Imports"))
-          install.packages(c('rjava',
-          'tabulizer',
-          'tidyverse'
-          ))
+          install.packages('rjava')
+          install.packages('tabulizer') remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch", dependencies = c("Depends", "Imports"))
+          install.packages('tidyverse')
           shell: Rscript {0}
 
         # Run R script
