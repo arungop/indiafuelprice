@@ -3,8 +3,15 @@ name: Fuelprice
 
 # Controls when the action will run.
 on:
-  # push:
-    # branches: main
+  push:
+    branches: 
+      - main
+      - develop
+      
+  pull_request:
+    branches:
+      - main
+      - main
   schedule:
     - cron: '25 17 */2 * *'
 
@@ -57,6 +64,7 @@ jobs:
 
  # Add new files in data folder, commit along with other modified files, push
       - name: Commit files
+        if: github.event.schedule != '25 17 */2 * *'
         run: |
           git config --local user.name actions-user
           git config --local user.email "actions@github.com"
