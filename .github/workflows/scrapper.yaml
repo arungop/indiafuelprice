@@ -9,9 +9,6 @@ on:
 jobs:
   autoscrape:
     runs-on: ubuntu-latest
-    env: |
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      # R_KEEP_PKG_SOURCE: yes
 
     # Load repo and install R
     steps:
