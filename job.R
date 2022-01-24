@@ -2,6 +2,7 @@
 
 library(tabulizer)
 library(tidyverse)
+library(lubridate)
 
 
 # Source file
