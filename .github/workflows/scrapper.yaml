@@ -39,11 +39,12 @@ jobs:
       - name: Install libraries
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          install.packages("rJava")
+          install.packages('tidyverse')
+          install.packages('rjava')
           remotes::install_github(c('ropensci/tabulizerjars', 'ropensci/tabulizer'), INSTALL_opts = '--no-multiarch', dependencies = c('Depends", 'Imports'))
           install.packages('tabulizer') 
-          install.packages('tidyverse')
-          shell: Rscript {0}
+
+        shell: Rscript {0}
 
         # Run R script
       - name: Fuelprices
