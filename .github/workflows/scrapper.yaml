@@ -17,10 +17,6 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
 
       - uses: r-lib/actions/setup-pandoc@v1
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
           
       - name: Restore R package cache
         uses: actions/cache@v2
@@ -35,7 +31,9 @@ jobs:
 
         # Set-up R packages
       - name: Install libraries
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          install.packages('remotes')
           remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"), INSTALL_opts = "--no-multiarch", dependencies = c("Depends", "Imports"))
           install.packages(c('rjava',
           'tabulizer',
@@ -45,7 +43,7 @@ jobs:
 
         # Run R script
       - name: Fuelprices
-        run: Rscript job.R
+        run: source('job.R')
 
  # Add new files in data folder, commit along with other modified files, push
       - name: Commit files
