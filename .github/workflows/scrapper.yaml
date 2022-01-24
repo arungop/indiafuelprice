@@ -49,6 +49,7 @@ jobs:
         # Run R script
       - name: Fuelprices
         run: source('job.R')
+        shell: Rscript {0}
 
  # Add new files in data folder, commit along with other modified files, push
       - name: Commit files
