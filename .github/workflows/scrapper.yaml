@@ -41,7 +41,7 @@ jobs:
         run: |
           install.packages('tidyverse')
           install.packages('rJava')
-          remotes::install_github(c('ropensci/tabulizerjars', 'ropensci/tabulizer'), INSTALL_opts = '--no-multiarch', dependencies = c('Depends", 'Imports'))
+          remotes::install_github(c('ropensci/tabulizerjars', 'ropensci/tabulizer'), INSTALL_opts = '--no-multiarch', dependencies = c('Depends', 'Imports'))
           install.packages('tabulizer') 
 
         shell: Rscript {0}
