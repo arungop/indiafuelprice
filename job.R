@@ -36,7 +36,7 @@ Pt <- petrol_today  %>%
 
   mutate_if(is.character, ~as.numeric(as.character(.))) # Convert other coloumns into numeric
 
-Pt$Date <- ymd(Pt$Date) # Changed date into ymd format
+Pt$Date <- as.Date(Pt$Date) # Changed date into ymd format
 
 
 # Diesel price (Procedures same as above)
@@ -59,7 +59,8 @@ dt <- diesel_today  %>%
 
   mutate_if(is.character, ~as.numeric(as.character(.)))
 
-dt$Date <- ymd(dt$Date)
+print(dt)
+dt$Date <- as.Date(dt$Date)
 
 
 # Append data to csv (two files)
