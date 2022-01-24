@@ -25,8 +25,11 @@ jobs:
 
     # Set-up R
     - name: Install packages
+      
       run: |
+        sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
         R -e 'install.packages("curl")'
+        R -e 'install.packages("rjava")'
         R -e 'install.packages("remotes")'
         R -e 'install.packages("tidyverse")'
         R -e 'remotes::install_github(c("ropensci/tabulizerjars", "ropensci/tabulizer"),dependencies = TRUE)'
