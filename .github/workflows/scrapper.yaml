@@ -1,0 +1,41 @@
+# Hourly scraping
+name: Fuelprice
+
+# Controls when the action will run.
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+
+jobs:
+  autoscrape:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Load repo and install R
+    steps:
+    - uses: actions/checkout@master
+    - uses: r-lib/actions/setup-r@master
+      with:
+          r-version: 'latest'
+
+    # Set-up R
+    - name: Install packages
+      run: |
+        R -e 'install.packages("tabulizer")'
+        R -e 'install.packages("tidyverse")
+    # Run R script
+    - name: Fuelprices
+      run: Rscript job.R
+
+ # Add new files in data folder, commit along with other modified files, push
+    - name: Commit files
+      run: |
+        git config --local user.name actions-user
+        git config --local user.email "actions@github.com"
+        git add data/*
+        git commit -am "GH ACTION Headlines $(date)"
+        git push origin main
+      env:
+        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+        username: github-actions
