@@ -1,5 +1,5 @@
 # Hourly scraping
-name: Fuelprice
+name: autoscrape
 
 # Controls when the action will run.
 on:
