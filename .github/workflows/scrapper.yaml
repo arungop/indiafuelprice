@@ -4,10 +4,17 @@ name: Fuelprice
 # Controls when the action will run.
 on:
   push:
+<<<<<<< HEAD
     branches:
       - main
       - develop
 
+=======
+    branches: 
+      - main
+      - develop
+      
+>>>>>>> main
   pull_request:
     branches:
       - main
