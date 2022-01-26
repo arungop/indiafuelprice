@@ -2,6 +2,7 @@
 
 library(tabulizer)
 library(tidyverse)
+library(lubridate)
 
 
 # Source file
@@ -36,7 +37,7 @@ Pt <- petrol_today  %>%
 
   mutate_if(is.character, ~as.numeric(as.character(.))) # Convert other coloumns into numeric
 
-Pt$Date <- as.Date(Pt$Date) # Changed date into ymd format
+Pt$Date <- ymd(Pt$Date) # Changed date into ymd format
 
 
 # Diesel price (Procedures same as above)
@@ -59,8 +60,7 @@ dt <- diesel_today  %>%
 
   mutate_if(is.character, ~as.numeric(as.character(.)))
 
-print(dt)
-dt$Date <- as.Date(dt$Date)
+dt$Date <- ymd(dt$Date)
 
 
 # Append data to csv (two files)
