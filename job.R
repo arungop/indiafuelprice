@@ -85,12 +85,12 @@ fuel_update <- function(item, pdf) {
 write_output <- function(item, format, param) {
     
     if (item == 'petrol' || item == 'diesel') {
-        
+        message(item)
         if (format == 'csv') {
             fname <- paste("./data/", str_to_title(item),".csv", sep="")
             write.csv(param,fname, quote=F,row.names=FALSE)
         }
-        
+
         else if (format == 'json') {
             fname <- paste("./data/", str_to_title(item),".json", sep="")
             djson <- write_json(param, path=fname)
@@ -106,5 +106,9 @@ write_output <- function(item, format, param) {
     }
 }
 
-
-
+pet <- fuel_update('petrol', pdf)
+des <- fuel_update('diesel', pdf)
+write_output('petrol', 'csv', pet)
+write_output('petrol', 'json', pet)
+write_output('diesel', 'csv', des)
+write_output('diesel', 'json', des)
