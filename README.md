@@ -1,2 +1,2 @@
 # indiafuelprice
-Automatic fuel price collector
+Automatic fuel price collector of India metro cities
